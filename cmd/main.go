@@ -20,14 +20,13 @@ import (
 	"net/http"
 	"os"
 
-	httpSwagger "github.com/swaggo/http-swagger"
-
-	"github.com/Kostikans/AvitoTechAdversting/configs"
-	"github.com/Kostikans/AvitoTechAdversting/internal/package/logger"
+	"github.com/Kostikans/AvitoTechadvertising/configs"
+	"github.com/Kostikans/AvitoTechadvertising/internal/package/logger"
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 func NewRouter() *mux.Router {
@@ -46,11 +45,10 @@ func NewRouter() *mux.Router {
 }
 
 func InitDB() *sqlx.DB {
-	connStr := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable",
+	var connStr = fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable",
 		configs.BdConfig.User,
 		configs.BdConfig.Password,
 		configs.BdConfig.DBName)
-
 	db, err := sqlx.Connect("postgres", connStr)
 	if err != nil {
 		log.Fatalln(err)
