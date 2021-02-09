@@ -12,12 +12,12 @@ type AdvertisingUsecase struct {
 func NewAdvertisingUsecase(AdvertisingRepo advertising.Repository) *AdvertisingUsecase {
 	return &AdvertisingUsecase{AdvertisingRepo: AdvertisingRepo}
 }
-func (AdvUsecase *AdvertisingUsecase) AddAdvertising(advertising advertisingModel.Advertising) int {
+func (AdvUsecase *AdvertisingUsecase) AddAdvertising(advertising advertisingModel.Advertising) (int, error) {
 	return AdvUsecase.AddAdvertising(advertising)
 }
-func (AdvUsecase *AdvertisingUsecase) GetAdvertising(advertisingID int) advertisingModel.Advertising {
+func (AdvUsecase *AdvertisingUsecase) GetAdvertising(advertisingID int) (advertisingModel.Advertising, error) {
 	return AdvUsecase.GetAdvertising(advertisingID)
 }
-func (AdvUsecase *AdvertisingUsecase) ListAdvertising(field string, desc bool) advertisingModel.AdvertisingList {
+func (AdvUsecase *AdvertisingUsecase) ListAdvertising(field string, desc bool) (advertisingModel.AdvertisingList, error) {
 	return AdvUsecase.ListAdvertising(field, desc)
 }
