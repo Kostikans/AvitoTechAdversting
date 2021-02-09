@@ -1,4 +1,4 @@
-module github.com/Kostikans/AvitoTechAdversting
+module github.com/Kostikans/AvitoTechadvertising
 
 go 1.15
 
