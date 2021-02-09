@@ -20,6 +20,10 @@ import (
 	"net/http"
 	"os"
 
+	advertisingDelivery "github.com/Kostikans/AvitoTechadvertising/internal/app/advertising/delivery/http"
+	advertisingRepository "github.com/Kostikans/AvitoTechadvertising/internal/app/advertising/repository"
+	advertisingUsecase "github.com/Kostikans/AvitoTechadvertising/internal/app/advertising/usecase"
+
 	"github.com/Kostikans/AvitoTechadvertising/configs"
 	"github.com/Kostikans/AvitoTechadvertising/internal/package/logger"
 	"github.com/gorilla/mux"
@@ -64,24 +68,20 @@ func main() {
 	}
 	configs.Init()
 	db := InitDB()
-	logOutput, err := os.Create("log.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
+
 	err = configs.ExportConfig()
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer logOutput.Close()
-	log := logger.NewLogger(logOutput)
-	if err != nil {
-		log.Error(err)
-	}
+
+	log := logger.NewLogger(os.Stdout)
 
 	r := NewRouter()
+	advRepo := advertisingRepository.NewAdvertisingRepository(db)
+	advUsecase := advertisingUsecase.NewAdvertisingUsecase(advRepo)
+	advertisingDelivery.NewAdvertisingDelivery(r, advUsecase, log)
 
-	err = http.ListenAndServe(viper.GetString(configs.ConfigFields.AvitoServicePort), r)
-	if err != nil {
+	if err := http.ListenAndServe(viper.GetString(configs.ConfigFields.AvitoServicePort), r); err != nil {
 		log.Fatal(err)
 	}
 	log.Info("Server started at port", viper.GetString(configs.ConfigFields.AvitoServicePort))

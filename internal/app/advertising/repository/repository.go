@@ -32,6 +32,12 @@ func (advRepo *AdvertisingRepository) GetAdvertising(advertisingID int) (adverti
 	return advertising, nil
 }
 func (advRepo *AdvertisingRepository) ListAdvertising(field string, desc bool) (advertisingModel.AdvertisingList, error) {
-	var advertising []advertisingModel.Advertising
-	err := advRepo.db.Select(&advertising)
+	var advertisingList advertisingModel.AdvertisingList
+	var advertisings []advertisingModel.Advertising
+	err := advRepo.db.Select(&advertisings, listAdvertising)
+	if err != nil {
+		return advertisingList, customError.NewCustomError(err, responseCodes.ServerInternalError, 1)
+	}
+	advertisingList.List = advertisings
+	return advertisingList, nil
 }

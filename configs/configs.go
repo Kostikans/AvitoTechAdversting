@@ -22,9 +22,9 @@ var BdConfig postgresConfig
 
 func Init() {
 	BdConfig = postgresConfig{
-		User:     os.Getenv("PostgresAvitoUser"),
-		Password: os.Getenv("PostgresAvitoPassword"),
-		DBName:   os.Getenv("PostgresAvitoDBName"),
+		User:     os.Getenv("PostgresAvitoAdvertisingUser"),
+		Password: os.Getenv("PostgresAvitoAdvertisingPassword"),
+		DBName:   os.Getenv("PostgresAvitoAdvertisingDBName"),
 	}
 
 }

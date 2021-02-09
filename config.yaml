@@ -1,0 +1,2 @@
+ports:
+  AvitoServicePort: ":9000"
