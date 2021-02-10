@@ -4,6 +4,7 @@ go 1.15
 
 require (
 	github.com/go-park-mail-ru/2020_2_JMickhs v0.0.0-20201224082716-5ac6057da11c
+	github.com/go-playground/validator/v10 v10.4.1
 	github.com/gorilla/mux v1.8.0
 	github.com/jmoiron/sqlx v1.3.1
 	github.com/joho/godotenv v1.3.0

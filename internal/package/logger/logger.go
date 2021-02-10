@@ -4,7 +4,6 @@ import (
 	"context"
 	"io"
 	"net/http"
-	"os"
 
 	"github.com/sirupsen/logrus"
 )
@@ -18,8 +17,7 @@ func NewLogger(writer io.Writer) *CustomLogger {
 	Formatter := new(logrus.JSONFormatter)
 	Formatter.TimestampFormat = "02-01-2006 15:04:05"
 	Logger.SetFormatter(Formatter)
-	mw := io.MultiWriter(os.Stdout, writer)
-	Logger.SetOutput(mw)
+	Logger.SetOutput(writer)
 	return Logger
 }
 

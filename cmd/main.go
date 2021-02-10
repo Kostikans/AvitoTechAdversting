@@ -20,6 +20,8 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/go-playground/validator/v10"
+
 	advertisingDelivery "github.com/Kostikans/AvitoTechadvertising/internal/app/advertising/delivery/http"
 	advertisingRepository "github.com/Kostikans/AvitoTechadvertising/internal/app/advertising/repository"
 	advertisingUsecase "github.com/Kostikans/AvitoTechadvertising/internal/app/advertising/usecase"
@@ -78,7 +80,8 @@ func main() {
 
 	r := NewRouter()
 	advRepo := advertisingRepository.NewAdvertisingRepository(db)
-	advUsecase := advertisingUsecase.NewAdvertisingUsecase(advRepo)
+	validation := validator.New()
+	advUsecase := advertisingUsecase.NewAdvertisingUsecase(advRepo, validation)
 	advertisingDelivery.NewAdvertisingDelivery(r, advUsecase, log)
 
 	if err := http.ListenAndServe(viper.GetString(configs.ConfigFields.AvitoServicePort), r); err != nil {
