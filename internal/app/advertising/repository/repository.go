@@ -1,7 +1,11 @@
 package advertisingRepository
 
 import (
+	"database/sql"
+	"fmt"
 	"strings"
+
+	"github.com/go-park-mail-ru/2020_2_JMickhs/package/serverError"
 
 	advertisingModel "github.com/Kostikans/AvitoTechadvertising/internal/app/advertising/model"
 	"github.com/Kostikans/AvitoTechadvertising/internal/package/customError"
@@ -17,7 +21,7 @@ type AdvertisingRepository struct {
 func NewAdvertisingRepository(db *sqlx.DB) *AdvertisingRepository {
 	return &AdvertisingRepository{db: db}
 }
-func (advRepo *AdvertisingRepository) AddAdvertising(advertising advertisingModel.Advertising) (int, error) {
+func (advRepo *AdvertisingRepository) AddAdvertising(advertising advertisingModel.AdvertisingAdd) (int, error) {
 	var advertisingID int
 	err := advRepo.db.QueryRow(AddAdvertising, advertising.Name, advertising.Description, advertising.Photos[0], pq.Array(advertising.Photos[1:]), advertising.Cost).Scan(&advertisingID)
 	if err != nil {
@@ -66,8 +70,8 @@ func (advRepo *AdvertisingRepository) GenerateQueryForGetAdvertisingList(sort st
 
 	if sort == "cost" {
 		query += "order by cost"
-	} else if sort == "create" {
-		query += "order by create"
+	} else if sort == "created" {
+		query += "order by created"
 	}
 
 	if desc == "true" {
@@ -77,6 +81,16 @@ func (advRepo *AdvertisingRepository) GenerateQueryForGetAdvertisingList(sort st
 	}
 
 	query += " LIMIT 10"
-
+	fmt.Println(query)
 	return query
+}
+
+func (advRepo *AdvertisingRepository) CheckAdvertisingExist(advertisingID int) (bool, error) {
+	var exists bool
+	query := fmt.Sprintf("SELECT exists (%s)", CheckAdvertisingExist)
+	err := advRepo.db.QueryRow(query, advertisingID).Scan(&exists)
+	if err != nil && err != sql.ErrNoRows {
+		return exists, customError.NewCustomError(err, serverError.ServerInternalError, 1)
+	}
+	return exists, nil
 }

@@ -12,6 +12,14 @@ type Advertising struct {
 }
 
 // easyjson:json
+type AdvertisingAdd struct {
+	Name        string   `json:"name" db:"name" validate:"max=200"`
+	Description string   `json:"description,omitempty" db:"description" validate:"max=1000"`
+	Photos      []string `json:"photos,omitempty" db:"photos" validate:"max=3"`
+	Cost        int      `json:"cost" db:"cost"`
+}
+
+// easyjson:json
 type AdvertisingList struct {
 	List   []Advertising `json:"list"`
 	Cursor Cursor        `json:"cursor"`

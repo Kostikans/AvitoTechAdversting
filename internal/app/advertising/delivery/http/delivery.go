@@ -1,6 +1,7 @@
 package advertisingDelivery
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -37,7 +38,7 @@ func NewAdvertisingDelivery(r *mux.Router, AdvertisingUsecase advertising.Usecas
 //  201: AddAdvertising
 //  400: badrequest
 func (AdvDelivery *AdvertisingDelivery) AddAdvertisingHandler(w http.ResponseWriter, r *http.Request) {
-	var advertisingIn advertisingModel.Advertising
+	var advertisingIn advertisingModel.AdvertisingAdd
 	err := easyjson.UnmarshalFromReader(r.Body, &advertisingIn)
 	if err != nil {
 		customError.PostError(w, r, AdvDelivery.logger, err, responseCodes.BadRequest)
@@ -54,9 +55,9 @@ func (AdvDelivery *AdvertisingDelivery) AddAdvertisingHandler(w http.ResponseWri
 
 // swagger:route GET /api/v1/advertising/{id} advertising GetAdvertising
 // responses:
-//  200:
-//  201: GetAdvertising
+//  200: GetAdvertising
 //  400: badrequest
+//  404: notfound
 func (AdvDelivery *AdvertisingDelivery) GetAdvertisingHandler(w http.ResponseWriter, r *http.Request) {
 	advertisingIDVar := mux.Vars(r)["id"]
 	advertisingID, _ := strconv.Atoi(advertisingIDVar)
@@ -72,12 +73,12 @@ func (AdvDelivery *AdvertisingDelivery) GetAdvertisingHandler(w http.ResponseWri
 
 // swagger:route GET /api/v1/advertising advertising ListAdvertising
 // responses:
-//  200:
-//  201: AddAdvertising
+//  200: ListAdvertising
 //  400: badrequest
 func (AdvDelivery *AdvertisingDelivery) ListAdvertisingHandler(w http.ResponseWriter, r *http.Request) {
 	sort := r.FormValue("sort")
 	desc := r.FormValue("desc")
+	fmt.Println("fsd")
 
 	advertisingList, err := AdvDelivery.AdvertisingUsecase.ListAdvertising(sort, desc)
 	if err != nil {

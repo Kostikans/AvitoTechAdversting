@@ -9,12 +9,15 @@ definitions:
         type: integer
         x-go-name: Cost
       description:
+        description: max length 1000
         type: string
         x-go-name: Description
       name:
+        description: max length 200
         type: string
         x-go-name: Name
       photos:
+        description: max length 3
         items:
           type: string
         type: array
@@ -76,6 +79,19 @@ definitions:
         x-go-name: Photos
     type: object
     x-go-package: _/home/kostikan/GoBuilds/github.com/Kostikans/AvitoTechAdversting/docs
+  ListAdvertisingResponseWrap:
+    properties:
+      code:
+        format: int64
+        type: integer
+        x-go-name: Code
+      data:
+        items:
+          $ref: '#/definitions/GetAdvertisingWrapModel'
+        type: array
+        x-go-name: Data
+    type: object
+    x-go-package: _/home/kostikan/GoBuilds/github.com/Kostikans/AvitoTechAdversting/docs
 info:
   description: Swagger spec.
   title: Golang service API for Avito
@@ -84,10 +100,18 @@ paths:
   /api/v1/advertising:
     get:
       operationId: ListAdvertising
+      parameters:
+      - in: query
+        name: sort
+        type: string
+        x-go-name: Sort
+      - in: query
+        name: desc
+        type: boolean
+        x-go-name: Desc
       responses:
-        "200": {}
-        "201":
-          $ref: '#/responses/AddAdvertising'
+        "200":
+          $ref: '#/responses/ListAdvertising'
         "400":
           $ref: '#/responses/badrequest'
       tags:
@@ -110,12 +134,24 @@ paths:
   /api/v1/advertising/{id}:
     get:
       operationId: GetAdvertising
+      parameters:
+      - format: int64
+        in: path
+        name: id
+        required: true
+        type: integer
+        x-go-name: Body
+      - in: query
+        name: fields
+        type: string
+        x-go-name: Body
       responses:
-        "200": {}
-        "201":
+        "200":
           $ref: '#/responses/GetAdvertising'
         "400":
           $ref: '#/responses/badrequest'
+        "404":
+          $ref: '#/responses/notfound'
       tags:
       - advertising
 produces:
@@ -127,6 +163,9 @@ responses:
   GetAdvertising:
     schema:
       $ref: '#/definitions/GetAdvertisingWrap'
+  ListAdvertising:
+    schema:
+      $ref: '#/definitions/ListAdvertisingResponseWrap'
   badrequest:
     description: invalid json or get parameters
     schema:

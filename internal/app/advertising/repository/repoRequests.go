@@ -4,4 +4,4 @@ const AddAdvertising = "INSERT INTO advertising VALUES(default,$1,$2,$3,$4,$5) R
 
 const GetAdvertising = "SELECT name,cost,photos[1] from advertising where advertising_id=$1"
 
-const listAdvertising = "SELECT name,photos[1],cost from advertising limit 10"
+const CheckAdvertisingExist = "SELECT * from advertising where advertising_id=$1"
