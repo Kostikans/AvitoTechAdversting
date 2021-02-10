@@ -132,8 +132,6 @@ func easyjsonC80ae7adDecodeGithubComKostikansAvitoTechadvertisingInternalAppAdve
 				}
 				in.Delim(']')
 			}
-		case "cursor":
-			(out.Cursor).UnmarshalEasyJSON(in)
 		default:
 			in.SkipRecursive()
 		}
@@ -164,11 +162,6 @@ func easyjsonC80ae7adEncodeGithubComKostikansAvitoTechadvertisingInternalAppAdve
 			out.RawByte(']')
 		}
 	}
-	{
-		const prefix string = ",\"cursor\":"
-		out.RawString(prefix)
-		(in.Cursor).MarshalEasyJSON(out)
-	}
 	out.RawByte('}')
 }
 
@@ -195,7 +188,73 @@ func (v *AdvertisingList) UnmarshalJSON(data []byte) error {
 func (v *AdvertisingList) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjsonC80ae7adDecodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel1(l, v)
 }
-func easyjsonC80ae7adDecodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel2(in *jlexer.Lexer, out *AdvertisingAdd) {
+func easyjsonC80ae7adDecodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel2(in *jlexer.Lexer, out *AdvertisingID) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		if isTopLevel {
+			in.Consumed()
+		}
+		in.Skip()
+		return
+	}
+	in.Delim('{')
+	for !in.IsDelim('}') {
+		key := in.UnsafeFieldName(false)
+		in.WantColon()
+		if in.IsNull() {
+			in.Skip()
+			in.WantComma()
+			continue
+		}
+		switch key {
+		case "advertisingID":
+			out.AdvID = int(in.Int())
+		default:
+			in.SkipRecursive()
+		}
+		in.WantComma()
+	}
+	in.Delim('}')
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjsonC80ae7adEncodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel2(out *jwriter.Writer, in AdvertisingID) {
+	out.RawByte('{')
+	first := true
+	_ = first
+	{
+		const prefix string = ",\"advertisingID\":"
+		out.RawString(prefix[1:])
+		out.Int(int(in.AdvID))
+	}
+	out.RawByte('}')
+}
+
+// MarshalJSON supports json.Marshaler interface
+func (v AdvertisingID) MarshalJSON() ([]byte, error) {
+	w := jwriter.Writer{}
+	easyjsonC80ae7adEncodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel2(&w, v)
+	return w.Buffer.BuildBytes(), w.Error
+}
+
+// MarshalEasyJSON supports easyjson.Marshaler interface
+func (v AdvertisingID) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjsonC80ae7adEncodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel2(w, v)
+}
+
+// UnmarshalJSON supports json.Unmarshaler interface
+func (v *AdvertisingID) UnmarshalJSON(data []byte) error {
+	r := jlexer.Lexer{Data: data}
+	easyjsonC80ae7adDecodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel2(&r, v)
+	return r.Error()
+}
+
+// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
+func (v *AdvertisingID) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjsonC80ae7adDecodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel2(l, v)
+}
+func easyjsonC80ae7adDecodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel3(in *jlexer.Lexer, out *AdvertisingAdd) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -253,7 +312,7 @@ func easyjsonC80ae7adDecodeGithubComKostikansAvitoTechadvertisingInternalAppAdve
 		in.Consumed()
 	}
 }
-func easyjsonC80ae7adEncodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel2(out *jwriter.Writer, in AdvertisingAdd) {
+func easyjsonC80ae7adEncodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel3(out *jwriter.Writer, in AdvertisingAdd) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -292,27 +351,27 @@ func easyjsonC80ae7adEncodeGithubComKostikansAvitoTechadvertisingInternalAppAdve
 // MarshalJSON supports json.Marshaler interface
 func (v AdvertisingAdd) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjsonC80ae7adEncodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel2(&w, v)
+	easyjsonC80ae7adEncodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel3(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v AdvertisingAdd) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjsonC80ae7adEncodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel2(w, v)
+	easyjsonC80ae7adEncodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel3(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *AdvertisingAdd) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjsonC80ae7adDecodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel2(&r, v)
+	easyjsonC80ae7adDecodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel3(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *AdvertisingAdd) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjsonC80ae7adDecodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel2(l, v)
+	easyjsonC80ae7adDecodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel3(l, v)
 }
-func easyjsonC80ae7adDecodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel3(in *jlexer.Lexer, out *Advertising) {
+func easyjsonC80ae7adDecodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel4(in *jlexer.Lexer, out *Advertising) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -374,7 +433,7 @@ func easyjsonC80ae7adDecodeGithubComKostikansAvitoTechadvertisingInternalAppAdve
 		in.Consumed()
 	}
 }
-func easyjsonC80ae7adEncodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel3(out *jwriter.Writer, in Advertising) {
+func easyjsonC80ae7adEncodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel4(out *jwriter.Writer, in Advertising) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -423,23 +482,23 @@ func easyjsonC80ae7adEncodeGithubComKostikansAvitoTechadvertisingInternalAppAdve
 // MarshalJSON supports json.Marshaler interface
 func (v Advertising) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjsonC80ae7adEncodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel3(&w, v)
+	easyjsonC80ae7adEncodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel4(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v Advertising) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjsonC80ae7adEncodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel3(w, v)
+	easyjsonC80ae7adEncodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel4(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *Advertising) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjsonC80ae7adDecodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel3(&r, v)
+	easyjsonC80ae7adDecodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel4(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *Advertising) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjsonC80ae7adDecodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel3(l, v)
+	easyjsonC80ae7adDecodeGithubComKostikansAvitoTechadvertisingInternalAppAdvertisingModel4(l, v)
 }

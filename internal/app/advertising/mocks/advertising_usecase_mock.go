@@ -34,10 +34,10 @@ func (m *MockUsecase) EXPECT() *MockUsecaseMockRecorder {
 }
 
 // AddAdvertising mocks base method
-func (m *MockUsecase) AddAdvertising(advertising advertisingModel.AdvertisingAdd) (int, error) {
+func (m *MockUsecase) AddAdvertising(advertising advertisingModel.AdvertisingAdd) (advertisingModel.AdvertisingID, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AddAdvertising", advertising)
-	ret0, _ := ret[0].(int)
+	ret0, _ := ret[0].(advertisingModel.AdvertisingID)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

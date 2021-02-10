@@ -21,9 +21,9 @@ type AdvertisingRepository struct {
 func NewAdvertisingRepository(db *sqlx.DB) *AdvertisingRepository {
 	return &AdvertisingRepository{db: db}
 }
-func (advRepo *AdvertisingRepository) AddAdvertising(advertising advertisingModel.AdvertisingAdd) (int, error) {
-	var advertisingID int
-	err := advRepo.db.QueryRow(AddAdvertising, advertising.Name, advertising.Description, advertising.Photos[0], pq.Array(advertising.Photos[1:]), advertising.Cost).Scan(&advertisingID)
+func (advRepo *AdvertisingRepository) AddAdvertising(advertising advertisingModel.AdvertisingAdd) (advertisingModel.AdvertisingID, error) {
+	var advertisingID advertisingModel.AdvertisingID
+	err := advRepo.db.QueryRow(AddAdvertising, advertising.Name, advertising.Description, advertising.Photos[0], pq.Array(advertising.Photos[1:]), advertising.Cost).Scan(&advertisingID.AdvID)
 	if err != nil {
 		return advertisingID, customError.NewCustomError(err, responseCodes.ServerInternalError, 1)
 	}
@@ -81,7 +81,7 @@ func (advRepo *AdvertisingRepository) GenerateQueryForGetAdvertisingList(sort st
 	}
 
 	query += " LIMIT 10"
-	fmt.Println(query)
+
 	return query
 }
 

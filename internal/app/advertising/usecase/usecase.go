@@ -18,10 +18,10 @@ type AdvertisingUsecase struct {
 func NewAdvertisingUsecase(AdvertisingRepo advertising.Repository, validator *validator.Validate) *AdvertisingUsecase {
 	return &AdvertisingUsecase{AdvertisingRepo: AdvertisingRepo, validation: validator}
 }
-func (AdvUsecase *AdvertisingUsecase) AddAdvertising(advertising advertisingModel.AdvertisingAdd) (int, error) {
+func (AdvUsecase *AdvertisingUsecase) AddAdvertising(advertising advertisingModel.AdvertisingAdd) (advertisingModel.AdvertisingID, error) {
 	err := AdvUsecase.validation.Struct(advertising)
 	if err != nil {
-		return 0, customError.NewCustomError(err, responseCodes.BadRequest, 1)
+		return advertisingModel.AdvertisingID{}, customError.NewCustomError(err, responseCodes.BadRequest, 1)
 	}
 	return AdvUsecase.AdvertisingRepo.AddAdvertising(advertising)
 }

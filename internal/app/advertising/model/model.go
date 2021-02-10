@@ -12,6 +12,11 @@ type Advertising struct {
 }
 
 // easyjson:json
+type AdvertisingID struct {
+	AdvID int `json:"advertisingID" db:"advertising_id" mapstructure:"advertisingID"`
+}
+
+// easyjson:json
 type AdvertisingAdd struct {
 	Name        string   `json:"name" db:"name" validate:"max=200"`
 	Description string   `json:"description,omitempty" db:"description" validate:"max=1000"`
@@ -21,8 +26,7 @@ type AdvertisingAdd struct {
 
 // easyjson:json
 type AdvertisingList struct {
-	List   []Advertising `json:"list"`
-	Cursor Cursor        `json:"cursor"`
+	List []Advertising `json:"list"`
 }
 
 // easyjson:json

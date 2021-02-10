@@ -20,7 +20,7 @@ func TestAdvertisingUsecase_AddAdvertising(t *testing.T) {
 		defer ctrl.Finish()
 		advertisingAdd := advertisingModel.AdvertisingAdd{Name: "Продам гараж", Description: "Очень хороший",
 			Photos: []string{"sfd/test.jpeg", "svcx/gd.jpeg"}, Cost: 1432}
-		retID := 1
+		retID := advertisingModel.AdvertisingID{AdvID: 3}
 		mockAdvertisingRepository := advertising_mock.NewMockRepository(ctrl)
 
 		mockAdvertisingRepository.EXPECT().
@@ -78,7 +78,7 @@ func TestAdvertisingUsecase_AddAdvertising(t *testing.T) {
 		defer ctrl.Finish()
 		advertisingAdd := advertisingModel.AdvertisingAdd{Name: "Продам гараж", Description: "Очень хороший",
 			Photos: []string{"sfd/test.jpeg", "svcx/gd.jpeg"}, Cost: 1432}
-		retID := 1
+		retID := advertisingModel.AdvertisingID{AdvID: 3}
 		mockAdvertisingRepository := advertising_mock.NewMockRepository(ctrl)
 
 		mockAdvertisingRepository.EXPECT().

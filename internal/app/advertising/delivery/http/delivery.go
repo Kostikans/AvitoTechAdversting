@@ -1,7 +1,6 @@
 package advertisingDelivery
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -78,7 +77,6 @@ func (AdvDelivery *AdvertisingDelivery) GetAdvertisingHandler(w http.ResponseWri
 func (AdvDelivery *AdvertisingDelivery) ListAdvertisingHandler(w http.ResponseWriter, r *http.Request) {
 	sort := r.FormValue("sort")
 	desc := r.FormValue("desc")
-	fmt.Println("fsd")
 
 	advertisingList, err := AdvDelivery.AdvertisingUsecase.ListAdvertising(sort, desc)
 	if err != nil {
