@@ -4,9 +4,11 @@ package advertisingModel
 // easyjson:json
 type Advertising struct {
 	Name        string   `json:"name" db:"name" validate:"max=200"`
-	Description string   `json:"description" db:"description" validate:"max=1000"`
-	Photos      []string `json:"photos" db:"photos" validate:"len=3"`
+	Description string   `json:"description,omitempty" db:"description" validate:"max=1000"`
+	MainPhoto   string   `json:"mainPhoto" db:"mainphoto"`
+	Photos      []string `json:"photos,omitempty" db:"photos" validate:"max=3"`
 	Cost        int      `json:"cost" db:"cost"`
+	Created     string   `json:"created,omitempty" db:"created"`
 }
 
 // easyjson:json

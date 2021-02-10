@@ -1,0 +1,140 @@
+basePath: /
+consumes:
+- application/json
+definitions:
+  AddAdvertisingParamWrap:
+    properties:
+      cost:
+        format: int64
+        type: integer
+        x-go-name: Cost
+      description:
+        type: string
+        x-go-name: Description
+      name:
+        type: string
+        x-go-name: Name
+      photos:
+        items:
+          type: string
+        type: array
+        x-go-name: Photos
+    type: object
+    x-go-package: _/home/kostikan/GoBuilds/github.com/Kostikans/AvitoTechAdversting/docs
+  AddAdvertisingWrap:
+    properties:
+      code:
+        format: int64
+        type: integer
+        x-go-name: Code
+      data:
+        format: int64
+        type: integer
+        x-go-name: Data
+    type: object
+    x-go-package: _/home/kostikan/GoBuilds/github.com/Kostikans/AvitoTechAdversting/docs
+  ErrorRequestWrap:
+    properties:
+      code:
+        format: int64
+        type: integer
+        x-go-name: Code
+      error:
+        type: string
+        x-go-name: Err
+    type: object
+    x-go-package: _/home/kostikan/GoBuilds/github.com/Kostikans/AvitoTechAdversting/docs
+  GetAdvertisingWrap:
+    properties:
+      code:
+        format: int64
+        type: integer
+        x-go-name: Code
+      data:
+        $ref: '#/definitions/GetAdvertisingWrapModel'
+    type: object
+    x-go-package: _/home/kostikan/GoBuilds/github.com/Kostikans/AvitoTechAdversting/docs
+  GetAdvertisingWrapModel:
+    properties:
+      cost:
+        format: int64
+        type: integer
+        x-go-name: Cost
+      description:
+        type: string
+        x-go-name: Description
+      mainPhoto:
+        type: string
+        x-go-name: MainPhoto
+      name:
+        type: string
+        x-go-name: Name
+      photos:
+        items:
+          type: string
+        type: array
+        x-go-name: Photos
+    type: object
+    x-go-package: _/home/kostikan/GoBuilds/github.com/Kostikans/AvitoTechAdversting/docs
+info:
+  description: Swagger spec.
+  title: Golang service API for Avito
+  version: 1.0.0
+paths:
+  /api/v1/advertising:
+    get:
+      operationId: ListAdvertising
+      responses:
+        "200": {}
+        "201":
+          $ref: '#/responses/AddAdvertising'
+        "400":
+          $ref: '#/responses/badrequest'
+      tags:
+      - advertising
+    post:
+      operationId: AddAdvertising
+      parameters:
+      - in: body
+        name: Body
+        schema:
+          $ref: '#/definitions/AddAdvertisingParamWrap'
+      responses:
+        "200": {}
+        "201":
+          $ref: '#/responses/AddAdvertising'
+        "400":
+          $ref: '#/responses/badrequest'
+      tags:
+      - advertising
+  /api/v1/advertising/{id}:
+    get:
+      operationId: GetAdvertising
+      responses:
+        "200": {}
+        "201":
+          $ref: '#/responses/GetAdvertising'
+        "400":
+          $ref: '#/responses/badrequest'
+      tags:
+      - advertising
+produces:
+- application/json
+responses:
+  AddAdvertising:
+    schema:
+      $ref: '#/definitions/AddAdvertisingWrap'
+  GetAdvertising:
+    schema:
+      $ref: '#/definitions/GetAdvertisingWrap'
+  badrequest:
+    description: invalid json or get parameters
+    schema:
+      $ref: '#/definitions/ErrorRequestWrap'
+  notfound:
+    description: data doesn't exist
+    schema:
+      $ref: '#/definitions/ErrorRequestWrap'
+schemes:
+- http
+swagger: "2.0"

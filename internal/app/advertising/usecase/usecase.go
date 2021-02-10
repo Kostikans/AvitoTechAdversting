@@ -23,9 +23,9 @@ func (AdvUsecase *AdvertisingUsecase) AddAdvertising(advertising advertisingMode
 	}
 	return AdvUsecase.AdvertisingRepo.AddAdvertising(advertising)
 }
-func (AdvUsecase *AdvertisingUsecase) GetAdvertising(advertisingID int) (advertisingModel.Advertising, error) {
-	return AdvUsecase.AdvertisingRepo.GetAdvertising(advertisingID)
+func (AdvUsecase *AdvertisingUsecase) GetAdvertising(advertisingID int, fields string) (advertisingModel.Advertising, error) {
+	return AdvUsecase.AdvertisingRepo.GetAdvertising(advertisingID, fields)
 }
-func (AdvUsecase *AdvertisingUsecase) ListAdvertising(field string, desc bool) (advertisingModel.AdvertisingList, error) {
+func (AdvUsecase *AdvertisingUsecase) ListAdvertising(field string, desc string) (advertisingModel.AdvertisingList, error) {
 	return AdvUsecase.AdvertisingRepo.ListAdvertising(field, desc)
 }

@@ -117,7 +117,7 @@ func easyjsonC80ae7adDecodeGithubComKostikansAvitoTechadvertisingInternalAppAdve
 				in.Delim('[')
 				if out.List == nil {
 					if !in.IsDelim(']') {
-						out.List = make([]Advertising, 0, 1)
+						out.List = make([]Advertising, 0, 0)
 					} else {
 						out.List = []Advertising{}
 					}
@@ -218,6 +218,8 @@ func easyjsonC80ae7adDecodeGithubComKostikansAvitoTechadvertisingInternalAppAdve
 			out.Name = string(in.String())
 		case "description":
 			out.Description = string(in.String())
+		case "mainPhoto":
+			out.MainPhoto = string(in.String())
 		case "photos":
 			if in.IsNull() {
 				in.Skip()
@@ -243,6 +245,8 @@ func easyjsonC80ae7adDecodeGithubComKostikansAvitoTechadvertisingInternalAppAdve
 			}
 		case "cost":
 			out.Cost = int(in.Int())
+		case "created":
+			out.Created = string(in.String())
 		default:
 			in.SkipRecursive()
 		}
@@ -262,17 +266,20 @@ func easyjsonC80ae7adEncodeGithubComKostikansAvitoTechadvertisingInternalAppAdve
 		out.RawString(prefix[1:])
 		out.String(string(in.Name))
 	}
-	{
+	if in.Description != "" {
 		const prefix string = ",\"description\":"
 		out.RawString(prefix)
 		out.String(string(in.Description))
 	}
 	{
+		const prefix string = ",\"mainPhoto\":"
+		out.RawString(prefix)
+		out.String(string(in.MainPhoto))
+	}
+	if len(in.Photos) != 0 {
 		const prefix string = ",\"photos\":"
 		out.RawString(prefix)
-		if in.Photos == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
-			out.RawString("null")
-		} else {
+		{
 			out.RawByte('[')
 			for v5, v6 := range in.Photos {
 				if v5 > 0 {
@@ -287,6 +294,11 @@ func easyjsonC80ae7adEncodeGithubComKostikansAvitoTechadvertisingInternalAppAdve
 		const prefix string = ",\"cost\":"
 		out.RawString(prefix)
 		out.Int(int(in.Cost))
+	}
+	if in.Created != "" {
+		const prefix string = ",\"created\":"
+		out.RawString(prefix)
+		out.String(string(in.Created))
 	}
 	out.RawByte('}')
 }

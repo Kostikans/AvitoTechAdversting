@@ -4,6 +4,6 @@ import advertisingModel "github.com/Kostikans/AvitoTechadvertising/internal/app/
 
 type Repository interface {
 	AddAdvertising(advertising advertisingModel.Advertising) (int, error)
-	GetAdvertising(advertisingID int) (advertisingModel.Advertising, error)
-	ListAdvertising(field string, desc bool) (advertisingModel.AdvertisingList, error)
+	GetAdvertising(advertisingID int, fields string) (advertisingModel.Advertising, error)
+	ListAdvertising(field string, desc string) (advertisingModel.AdvertisingList, error)
 }
