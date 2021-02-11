@@ -64,18 +64,18 @@ func (mr *MockRepositoryMockRecorder) GetAdvertising(advertisingID, fields inter
 }
 
 // ListAdvertising mocks base method
-func (m *MockRepository) ListAdvertising(field, desc string) (advertisingModel.AdvertisingList, error) {
+func (m *MockRepository) ListAdvertising(sort, desc string, page int) (advertisingModel.AdvertisingList, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListAdvertising", field, desc)
+	ret := m.ctrl.Call(m, "ListAdvertising", sort, desc, page)
 	ret0, _ := ret[0].(advertisingModel.AdvertisingList)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ListAdvertising indicates an expected call of ListAdvertising
-func (mr *MockRepositoryMockRecorder) ListAdvertising(field, desc interface{}) *gomock.Call {
+func (mr *MockRepositoryMockRecorder) ListAdvertising(sort, desc, page interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAdvertising", reflect.TypeOf((*MockRepository)(nil).ListAdvertising), field, desc)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAdvertising", reflect.TypeOf((*MockRepository)(nil).ListAdvertising), sort, desc, page)
 }
 
 // CheckAdvertisingExist mocks base method
@@ -91,4 +91,18 @@ func (m *MockRepository) CheckAdvertisingExist(advertisingID int) (bool, error) 
 func (mr *MockRepositoryMockRecorder) CheckAdvertisingExist(advertisingID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckAdvertisingExist", reflect.TypeOf((*MockRepository)(nil).CheckAdvertisingExist), advertisingID)
+}
+
+// GenerateQueryForGetAdvertisingList mocks base method
+func (m *MockRepository) GenerateQueryForGetAdvertisingList(sort, desc string) string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GenerateQueryForGetAdvertisingList", sort, desc)
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// GenerateQueryForGetAdvertisingList indicates an expected call of GenerateQueryForGetAdvertisingList
+func (mr *MockRepositoryMockRecorder) GenerateQueryForGetAdvertisingList(sort, desc interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GenerateQueryForGetAdvertisingList", reflect.TypeOf((*MockRepository)(nil).GenerateQueryForGetAdvertisingList), sort, desc)
 }

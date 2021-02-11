@@ -7,3 +7,10 @@ CREATE TABLE advertising(
     cost int,
     created timestamp default now()
 );
+
+CREATE TABLE advertising_count(
+    partition_id serial primary key NOT NULL ,
+    count int
+);
+
+INSERT INTO advertising_count VALUES (default,0);

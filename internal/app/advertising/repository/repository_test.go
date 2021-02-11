@@ -39,6 +39,11 @@ func TestAdvertisingRepository_AddAdvertising(t *testing.T) {
 			WithArgs(advertisingAddTest.Name, advertisingAddTest.Description, advertisingAddTest.Photos[0], pq.Array(advertisingAddTest.Photos[1:]), advertisingAddTest.Cost).
 			WillReturnRows(rowsAdvertising)
 
+		query = IncrementAdvertisingCount
+		mock.ExpectQuery(query).
+			WithArgs().
+			WillReturnRows()
+
 		sqlxDb := sqlx.NewDb(db, "sqlmock")
 
 		rep := NewAdvertisingRepository(sqlxDb)
@@ -67,6 +72,33 @@ func TestAdvertisingRepository_AddAdvertising(t *testing.T) {
 		assert.Error(t, err)
 		assert.Equal(t, customError.ParseCode(err), responseCodes.ServerInternalError)
 	})
+
+	t.Run("AddAdvertisingErr2", func(t *testing.T) {
+		query := AddAdvertising
+
+		rowsAdvertising := sqlmock.NewRows([]string{"advertising_id"}).AddRow(
+			3)
+
+		advertisingAddTest := advertisingModel.AdvertisingAdd{Name: "Продам гараж", Description: "Очень хороший",
+			Photos: []string{"sfd/test.jpeg", "svcx/gd.jpeg"}, Cost: 1432}
+
+		mock.ExpectQuery(query).
+			WithArgs(advertisingAddTest.Name, advertisingAddTest.Description, advertisingAddTest.Photos[0], pq.Array(advertisingAddTest.Photos[1:]), advertisingAddTest.Cost).
+			WillReturnRows(rowsAdvertising)
+
+		query = IncrementAdvertisingCount
+		mock.ExpectQuery(query).
+			WithArgs().
+			WillReturnError(errors.New(""))
+
+		sqlxDb := sqlx.NewDb(db, "sqlmock")
+
+		rep := NewAdvertisingRepository(sqlxDb)
+
+		_, err := rep.AddAdvertising(advertisingAddTest)
+		assert.Error(t, err)
+		assert.Equal(t, customError.ParseCode(err), responseCodes.ServerInternalError)
+	})
 }
 
 func TestAdvertisingRepository_GetAdvertising(t *testing.T) {
@@ -77,27 +109,108 @@ func TestAdvertisingRepository_GetAdvertising(t *testing.T) {
 	}
 	defer db.Close()
 
-	t.Run("AddAdvertising", func(t *testing.T) {
+	t.Run("GetAdvertising", func(t *testing.T) {
 		advertisingID := advertisingModel.AdvertisingID{AdvID: 3}
-		rowsAdvertising := sqlmock.NewRows([]string{"advertising_id"}).AddRow(
-			3)
+		rowsAdvertising := sqlmock.NewRows([]string{"name", "cost", "photos[1]"}).AddRow(
+			"Продам гараж", 1432, "sfd/test.jpeg")
 
-		query := AddAdvertising
+		query := GetAdvertising
 
-		advertisingAddTest := advertisingModel.AdvertisingAdd{Name: "Продам гараж", Description: "Очень хороший",
-			Photos: []string{"sfd/test.jpeg", "svcx/gd.jpeg"}, Cost: 1432}
+		advertisingAddTest := advertisingModel.Advertising{Name: "Продам гараж", MainPhoto: "sfd/test.jpeg", Cost: 1432}
 
 		mock.ExpectQuery(query).
-			WithArgs(advertisingAddTest.Name, advertisingAddTest.Description, advertisingAddTest.Photos[0], pq.Array(advertisingAddTest.Photos[1:]), advertisingAddTest.Cost).
+			WithArgs(advertisingID.AdvID).
 			WillReturnRows(rowsAdvertising)
 
 		sqlxDb := sqlx.NewDb(db, "sqlmock")
 
 		rep := NewAdvertisingRepository(sqlxDb)
 
-		advertisingIDActual, err := rep.AddAdvertising(advertisingAddTest)
+		advertisingActual, err := rep.GetAdvertising(advertisingID.AdvID, "")
 		assert.NoError(t, err)
-		assert.Equal(t, advertisingID, advertisingIDActual)
+		assert.Equal(t, advertisingAddTest, advertisingActual)
+	})
+	t.Run("GetAdvertising1", func(t *testing.T) {
+		advertisingID := advertisingModel.AdvertisingID{AdvID: 3}
+		rowsAdvertising := sqlmock.NewRows([]string{"name", "cost", "photos[1]", "photos"}).AddRow(
+			"Продам гараж", 1432, "sfd/test.jpeg", pq.Array([]string{"sfd/test.jpeg", "svcx/gd.jpeg"}))
+
+		query := GetAdvertisingWithPhotos
+
+		advertisingAddTest := advertisingModel.Advertising{Name: "Продам гараж", MainPhoto: "sfd/test.jpeg", Cost: 1432,
+			Photos: []string{"sfd/test.jpeg", "svcx/gd.jpeg"}}
+
+		mock.ExpectQuery(query).
+			WithArgs(advertisingID.AdvID).
+			WillReturnRows(rowsAdvertising)
+
+		sqlxDb := sqlx.NewDb(db, "sqlmock")
+
+		rep := NewAdvertisingRepository(sqlxDb)
+
+		advertisingActual, err := rep.GetAdvertising(advertisingID.AdvID, "photos")
+		assert.NoError(t, err)
+		assert.Equal(t, advertisingAddTest, advertisingActual)
+	})
+	t.Run("GetAdvertising2", func(t *testing.T) {
+		advertisingID := advertisingModel.AdvertisingID{AdvID: 3}
+		rowsAdvertising := sqlmock.NewRows([]string{"name", "cost", "photos[1]", "description"}).AddRow(
+			"Продам гараж", 1432, "sfd/test.jpeg", "Очень хороший")
+
+		query := GetAdvertisingWithDescription
+
+		advertisingAddTest := advertisingModel.Advertising{Name: "Продам гараж", MainPhoto: "sfd/test.jpeg", Cost: 1432, Description: "Очень хороший"}
+
+		mock.ExpectQuery(query).
+			WithArgs(advertisingID.AdvID).
+			WillReturnRows(rowsAdvertising)
+
+		sqlxDb := sqlx.NewDb(db, "sqlmock")
+
+		rep := NewAdvertisingRepository(sqlxDb)
+
+		advertisingActual, err := rep.GetAdvertising(advertisingID.AdvID, "description")
+		assert.NoError(t, err)
+		assert.Equal(t, advertisingAddTest, advertisingActual)
+	})
+	t.Run("GetAdvertising3", func(t *testing.T) {
+		advertisingID := advertisingModel.AdvertisingID{AdvID: 3}
+		rowsAdvertising := sqlmock.NewRows([]string{"name", "cost", "photos[1]", "photos", "description"}).AddRow(
+			"Продам гараж", 1432, "sfd/test.jpeg", pq.Array([]string{"sfd/test.jpeg", "svcx/gd.jpeg"}), "Очень хороший")
+
+		query := GetAdvertisingWithPhotosAndDescription
+
+		advertisingAddTest := advertisingModel.Advertising{Name: "Продам гараж", MainPhoto: "sfd/test.jpeg", Cost: 1432,
+			Photos: []string{"sfd/test.jpeg", "svcx/gd.jpeg"}, Description: "Очень хороший"}
+
+		mock.ExpectQuery(query).
+			WithArgs(advertisingID.AdvID).
+			WillReturnRows(rowsAdvertising)
+
+		sqlxDb := sqlx.NewDb(db, "sqlmock")
+
+		rep := NewAdvertisingRepository(sqlxDb)
+
+		advertisingActual, err := rep.GetAdvertising(advertisingID.AdvID, "description,photos")
+		assert.NoError(t, err)
+		assert.Equal(t, advertisingAddTest, advertisingActual)
+	})
+	t.Run("GetAdvertisingErr", func(t *testing.T) {
+		advertisingID := advertisingModel.AdvertisingID{AdvID: 3}
+
+		query := GetAdvertisingWithPhotosAndDescription
+
+		mock.ExpectQuery(query).
+			WithArgs(advertisingID.AdvID).
+			WillReturnError(errors.New(""))
+
+		sqlxDb := sqlx.NewDb(db, "sqlmock")
+
+		rep := NewAdvertisingRepository(sqlxDb)
+
+		_, err := rep.GetAdvertising(advertisingID.AdvID, "description,photos")
+		assert.Error(t, err)
+		assert.Equal(t, responseCodes.ServerInternalError, customError.ParseCode(err))
 	})
 }
 
@@ -110,6 +223,9 @@ func TestAdvertisingRepository_ListAdvertising(t *testing.T) {
 	defer db.Close()
 
 	t.Run("ListAdvertising", func(t *testing.T) {
+		rowsCount := sqlmock.NewRows([]string{"count"}).AddRow(
+			11)
+
 		rowsAdvertising := sqlmock.NewRows([]string{"name", "description", "mainphoto", "cost"}).AddRow(
 			"Продам гараж", "Очень хороший", "sfd/test.jpeg", 1432).AddRow(
 			"Продам гараж", "Очень хороший", "sfd/test.jpeg", 1432)
@@ -123,13 +239,19 @@ func TestAdvertisingRepository_ListAdvertising(t *testing.T) {
 			Name: "Продам гараж", Description: "Очень хороший",
 			MainPhoto: "sfd/test.jpeg", Cost: 1432,
 		}, {Name: "Продам гараж", Description: "Очень хороший",
-			MainPhoto: "sfd/test.jpeg", Cost: 1432}}}
+			MainPhoto: "sfd/test.jpeg", Cost: 1432}},
+			Page: advertisingModel.Page{CurrentPage: 1, PerPage: 10, LastPage: 2}}
 
 		mock.ExpectQuery(query).
 			WithArgs().
 			WillReturnRows(rowsAdvertising)
 
-		advertisingListActual, err := rep.ListAdvertising("cost", "true")
+		query = GetPageCount
+		mock.ExpectQuery(query).
+			WithArgs().
+			WillReturnRows(rowsCount)
+
+		advertisingListActual, err := rep.ListAdvertising("cost", "true", 1)
 		assert.NoError(t, err)
 		assert.Equal(t, advertisingListTest, advertisingListActual)
 	})
@@ -145,7 +267,7 @@ func TestAdvertisingRepository_ListAdvertising(t *testing.T) {
 			WithArgs().
 			WillReturnError(errors.New(""))
 
-		_, err := rep.ListAdvertising("cost", "true")
+		_, err := rep.ListAdvertising("cost", "true", 1)
 		assert.Error(t, err)
 		assert.Equal(t, customError.ParseCode(err), responseCodes.ServerInternalError)
 	})

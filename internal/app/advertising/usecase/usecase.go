@@ -36,8 +36,8 @@ func (AdvUsecase *AdvertisingUsecase) GetAdvertising(advertisingID int, fields s
 	}
 	return AdvUsecase.AdvertisingRepo.GetAdvertising(advertisingID, fields)
 }
-func (AdvUsecase *AdvertisingUsecase) ListAdvertising(field string, desc string) (advertisingModel.AdvertisingList, error) {
-	return AdvUsecase.AdvertisingRepo.ListAdvertising(field, desc)
+func (AdvUsecase *AdvertisingUsecase) ListAdvertising(field string, desc string, page int) (advertisingModel.AdvertisingList, error) {
+	return AdvUsecase.AdvertisingRepo.ListAdvertising(field, desc, page)
 }
 
 func (AdvUsecase *AdvertisingUsecase) CheckAdvertisingExist(AdvertisingID int) (bool, error) {

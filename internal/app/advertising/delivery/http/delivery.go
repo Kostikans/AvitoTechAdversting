@@ -2,6 +2,7 @@ package advertisingDelivery
 
 import (
 	"net/http"
+	"net/url"
 	"strconv"
 
 	"github.com/Kostikans/AvitoTechadvertising/internal/package/responseCodes"
@@ -78,10 +79,44 @@ func (AdvDelivery *AdvertisingDelivery) ListAdvertisingHandler(w http.ResponseWr
 	sort := r.FormValue("sort")
 	desc := r.FormValue("desc")
 
-	advertisingList, err := AdvDelivery.AdvertisingUsecase.ListAdvertising(sort, desc)
+	pageVar := r.FormValue("page")
+	page, err := strconv.Atoi(pageVar)
+	if err != nil {
+		page = 1
+	}
+
+	advertisingList, err := AdvDelivery.AdvertisingUsecase.ListAdvertising(sort, desc, page)
 	if err != nil {
 		customError.PostError(w, r, AdvDelivery.logger, err, nil)
 		return
 	}
+
+	advertisingList.Links = AdvDelivery.makeLinksHttpForListAdvertising(advertisingList.Page)
 	abstractResponse.SendDataResponse(w, responseCodes.OkCode, advertisingList)
+}
+
+func (AdvDelivery *AdvertisingDelivery) makeLinksHttpForListAdvertising(page advertisingModel.Page) advertisingModel.Links {
+	url := url.URL{
+		Path: "/api/v1/advertising",
+	}
+	links := advertisingModel.Links{}
+	query := url.Query()
+
+	query.Set("page", strconv.Itoa(page.LastPage))
+	url.RawQuery = query.Encode()
+	links.Last = url.Path + "?" + url.RawQuery
+
+	if page.CurrentPage < page.LastPage {
+		query.Set("page", strconv.Itoa(page.CurrentPage+1))
+		url.RawQuery = query.Encode()
+		links.NextUrl = url.Path + "?" + url.RawQuery
+	}
+
+	if page.CurrentPage > 1 {
+		query.Set("page", strconv.Itoa(page.CurrentPage-1))
+		url.RawQuery = query.Encode()
+		links.PrevUrl = url.Path + "?" + url.RawQuery
+	}
+
+	return links
 }

@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/Kostikans/AvitoTechadvertising/configs"
+
 	"github.com/go-park-mail-ru/2020_2_JMickhs/package/serverError"
 
 	advertisingModel "github.com/Kostikans/AvitoTechadvertising/internal/app/advertising/model"
@@ -27,41 +29,59 @@ func (advRepo *AdvertisingRepository) AddAdvertising(advertising advertisingMode
 	if err != nil {
 		return advertisingID, customError.NewCustomError(err, responseCodes.ServerInternalError, 1)
 	}
+	_, err = advRepo.db.Query(IncrementAdvertisingCount)
+	if err != nil {
+		return advertisingID, customError.NewCustomError(err, responseCodes.ServerInternalError, 1)
+	}
 	return advertisingID, nil
 }
 func (advRepo *AdvertisingRepository) GetAdvertising(advertisingID int, fields string) (advertisingModel.Advertising, error) {
 	var advertising advertisingModel.Advertising
-	err := advRepo.db.QueryRow(GetAdvertising, advertisingID).Scan(&advertising.Name, &advertising.Cost, &advertising.MainPhoto)
+	containDescription := strings.Contains(fields, "description")
+	containPhotos := strings.Contains(fields, "photos")
+
+	var err error
+	if containDescription && containPhotos {
+		err = advRepo.db.QueryRow(GetAdvertisingWithPhotosAndDescription, advertisingID).
+			Scan(&advertising.Name, &advertising.Cost, &advertising.MainPhoto, pq.Array(&advertising.Photos), &advertising.Description)
+	} else if containDescription {
+		err = advRepo.db.QueryRow(GetAdvertisingWithDescription, advertisingID).Scan(&advertising.Name, &advertising.Cost, &advertising.MainPhoto, &advertising.Description)
+	} else if containPhotos {
+		err = advRepo.db.QueryRow(GetAdvertisingWithPhotos, advertisingID).Scan(&advertising.Name, &advertising.Cost, &advertising.MainPhoto, pq.Array(&advertising.Photos))
+	} else {
+		err = advRepo.db.QueryRow(GetAdvertising, advertisingID).Scan(&advertising.Name, &advertising.Cost, &advertising.MainPhoto)
+	}
+
 	if err != nil {
 		return advertising, customError.NewCustomError(err, responseCodes.ServerInternalError, 1)
 	}
+
 	return advertising, nil
 }
 
-func (advRepo *AdvertisingRepository) GenerateQueryForGetAdvertising(fields string) string {
-	query := "SELECT name,cost,photos[1]"
-	fieldsStrings := strings.Split(fields, ",")
-	if fieldsStrings[0] == "description" {
-		query += ",description"
-	}
-	if fieldsStrings[1] == "photos" {
-		query += ",photos"
-	}
-
-	query += " from advertising where advertising_id=$1"
-	return query
-
-}
-
-func (advRepo *AdvertisingRepository) ListAdvertising(sort string, desc string) (advertisingModel.AdvertisingList, error) {
+func (advRepo *AdvertisingRepository) ListAdvertising(sort string, desc string, page int) (advertisingModel.AdvertisingList, error) {
 	var advertisingList advertisingModel.AdvertisingList
 	var advertising []advertisingModel.Advertising
 
-	err := advRepo.db.Select(&advertising, advRepo.GenerateQueryForGetAdvertisingList(sort, desc))
+	elementsPerPage := configs.ElementsPerPage
+	offset := (page - 1) * elementsPerPage
+
+	err := advRepo.db.Select(&advertising, advRepo.GenerateQueryForGetAdvertisingList(sort, desc), offset)
 	if err != nil {
 		return advertisingList, customError.NewCustomError(err, responseCodes.ServerInternalError, 1)
 	}
+
 	advertisingList.List = advertising
+	advertisingList.Page.CurrentPage = page
+	advertisingList.Page.PerPage = elementsPerPage
+
+	var elementsCount int
+	err = advRepo.db.QueryRow(GetPageCount).Scan(&elementsCount)
+	if err != nil {
+		return advertisingList, customError.NewCustomError(err, responseCodes.ServerInternalError, 1)
+	}
+
+	advertisingList.Page.LastPage = (elementsCount-1)/elementsPerPage + 1
 	return advertisingList, nil
 }
 
@@ -80,7 +100,7 @@ func (advRepo *AdvertisingRepository) GenerateQueryForGetAdvertisingList(sort st
 		query += " ASC"
 	}
 
-	query += " LIMIT 10"
+	query += fmt.Sprintf(" OFFSET $1 LIMIT %d", configs.ElementsPerPage)
 
 	return query
 }

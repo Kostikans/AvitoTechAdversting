@@ -64,16 +64,31 @@ func (mr *MockUsecaseMockRecorder) GetAdvertising(advertisingID, fields interfac
 }
 
 // ListAdvertising mocks base method
-func (m *MockUsecase) ListAdvertising(field, desc string) (advertisingModel.AdvertisingList, error) {
+func (m *MockUsecase) ListAdvertising(field, desc string, page int) (advertisingModel.AdvertisingList, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListAdvertising", field, desc)
+	ret := m.ctrl.Call(m, "ListAdvertising", field, desc, page)
 	ret0, _ := ret[0].(advertisingModel.AdvertisingList)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ListAdvertising indicates an expected call of ListAdvertising
-func (mr *MockUsecaseMockRecorder) ListAdvertising(field, desc interface{}) *gomock.Call {
+func (mr *MockUsecaseMockRecorder) ListAdvertising(field, desc, page interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAdvertising", reflect.TypeOf((*MockUsecase)(nil).ListAdvertising), field, desc)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAdvertising", reflect.TypeOf((*MockUsecase)(nil).ListAdvertising), field, desc, page)
+}
+
+// CheckAdvertisingExist mocks base method
+func (m *MockUsecase) CheckAdvertisingExist(AdvertisingID int) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CheckAdvertisingExist", AdvertisingID)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CheckAdvertisingExist indicates an expected call of CheckAdvertisingExist
+func (mr *MockUsecaseMockRecorder) CheckAdvertisingExist(AdvertisingID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckAdvertisingExist", reflect.TypeOf((*MockUsecase)(nil).CheckAdvertisingExist), AdvertisingID)
 }

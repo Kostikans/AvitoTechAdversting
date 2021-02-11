@@ -6,6 +6,7 @@ import advertisingModel "github.com/Kostikans/AvitoTechadvertising/internal/app/
 type Repository interface {
 	AddAdvertising(advertising advertisingModel.AdvertisingAdd) (advertisingModel.AdvertisingID, error)
 	GetAdvertising(advertisingID int, fields string) (advertisingModel.Advertising, error)
-	ListAdvertising(field string, desc string) (advertisingModel.AdvertisingList, error)
+	ListAdvertising(sort string, desc string, page int) (advertisingModel.AdvertisingList, error)
 	CheckAdvertisingExist(advertisingID int) (bool, error)
+	GenerateQueryForGetAdvertisingList(sort string, desc string) string
 }

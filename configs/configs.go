@@ -18,6 +18,8 @@ type postgresConfig struct {
 	DBName   string
 }
 
+const ElementsPerPage = 10
+
 var BdConfig postgresConfig
 
 func Init() {

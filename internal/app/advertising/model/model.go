@@ -26,11 +26,21 @@ type AdvertisingAdd struct {
 
 // easyjson:json
 type AdvertisingList struct {
-	List []Advertising `json:"list"`
+	List  []Advertising `json:"list"`
+	Page  Page          `json:"page"`
+	Links Links         `json:"links"`
 }
 
 // easyjson:json
-type Cursor struct {
-	Next string `json:"next"`
-	Prev string `json:"prev"`
+type Links struct {
+	NextUrl string `json:"next"`
+	PrevUrl string `json:"prev"`
+	Last    string `json:"last"`
+}
+
+// easyjson:json
+type Page struct {
+	CurrentPage int `json:"currentPage"`
+	PerPage     int `json:"perPage"`
+	LastPage    int `json:"lastPage"`
 }
