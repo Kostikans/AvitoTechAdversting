@@ -1,6 +1,7 @@
 package advertisingDelivery
 
 import (
+	"errors"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -83,6 +84,10 @@ func (AdvDelivery *AdvertisingDelivery) ListAdvertisingHandler(w http.ResponseWr
 	page, err := strconv.Atoi(pageVar)
 	if err != nil {
 		page = 1
+	}
+	if page < 1 {
+		customError.PostError(w, r, AdvDelivery.logger, errors.New("page must be positive number"), responseCodes.BadRequest)
+		return
 	}
 
 	advertisingList, err := AdvDelivery.AdvertisingUsecase.ListAdvertising(sort, desc, page)

@@ -14,7 +14,7 @@ type ErrorRequestWrap struct {
 
 //data doesn't exist
 //swagger:response notfound
-type NotFoundWrap struct {
+type NotFound struct {
 	//in: body
 	Body ErrorRequestWrap
 }

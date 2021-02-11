@@ -61,7 +61,7 @@ func (advRepo *AdvertisingRepository) GetAdvertising(advertisingID int, fields s
 
 func (advRepo *AdvertisingRepository) ListAdvertising(sort string, desc string, page int) (advertisingModel.AdvertisingList, error) {
 	var advertisingList advertisingModel.AdvertisingList
-	var advertising []advertisingModel.Advertising
+	var advertising []advertisingModel.AdvertisingListItem
 
 	elementsPerPage := configs.ElementsPerPage
 	offset := (page - 1) * elementsPerPage

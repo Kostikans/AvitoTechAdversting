@@ -1,84 +1,67 @@
 package docs
 
-//swagger:response AddAdvertising
-type AddAdvertisingDoc struct {
-	//in:body
-	Body AddAdvertisingWrap
-}
+import advertisingModel "github.com/Kostikans/AvitoTechadvertising/internal/app/advertising/model"
 
-type AddAdvertisingWrap struct {
-	Data int `json:"data,omitempty"`
-	Code int `json:"code"`
+//swagger:response AddAdvertising
+type AddAdvertisingResponse struct {
+	//in:body
+	Body struct {
+		Data advertisingModel.AdvertisingID `json:"data,omitempty"`
+		Code int                            `json:"code"`
+	}
 }
 
 //swagger:parameters AddAdvertising
 type AddAdvertisingParam struct {
 	//in:body
-	Body AddAdvertisingParamWrap
+	Body advertisingModel.AdvertisingAdd
 }
 
 //swagger:parameters GetAdvertising
 type GetAdvertisingParam struct {
 	//in:path
-	Body int `json:"id"`
+	ID int `json:"id"`
+	// description or photos, or both with ',' splitter; example(description,photos)
+	//in:query
+	Fields string `json:"fields"`
 }
 
 //swagger:parameters ListAdvertising
 type ListAdvertisingParam struct {
+	//"cost" or "created"
 	//in:query
 	Sort string `json:"sort"`
 	//in:query
 	Desc bool `json:"desc"`
-}
-
-type CursorWrap struct {
-	HasNext string `json:"next"`
-	HasPrev string `json:"prev"`
+	// by default 1
+	//in:query
+	Page int `json:"page"`
 }
 
 //swagger:response ListAdvertising
 type ListAdvertisingResponse struct {
-	//in:body
-	Body ListAdvertisingResponseWrap
+	//in: Body
+	Body struct {
+		Data advertisingModel.AdvertisingList `json:"data,omitempty"`
+		Code int                              `json:"code"`
+	}
 }
 
-type ListAdvertisingResponseWrap struct {
-	Data []GetAdvertisingWrapModel `json:"data,omitempty"`
-	Code int                       `json:"code"`
-}
-
-type AddAdvertisingParamWrap struct {
-	//max length 200
+type GetAdvertising struct {
 	Name string `json:"name" db:"name" validate:"max=200"`
-	//max length 1000
+	//optional
 	Description string `json:"description,omitempty" db:"description" validate:"max=1000"`
-	//max length 3
+	MainPhoto   string `json:"mainPhoto" `
+	//optional
 	Photos []string `json:"photos,omitempty" db:"photos" validate:"max=3"`
 	Cost   int      `json:"cost" `
 }
 
-type GetAdvertisingWrapModel struct {
-	Name        string   `json:"name" db:"name" validate:"max=200"`
-	Description string   `json:"description,omitempty" db:"description" validate:"max=1000"`
-	MainPhoto   string   `json:"mainPhoto" `
-	Photos      []string `json:"photos,omitempty" db:"photos" validate:"max=3"`
-	Cost        int      `json:"cost" `
-}
-
-type GetAdvertisingWrap struct {
-	Data GetAdvertisingWrapModel `json:"data,omitempty"`
-	Code int                     `json:"code"`
-}
-
 //swagger:response GetAdvertising
-type GetAdvertising struct {
-	//in: body
-	Body GetAdvertisingWrap
-}
-
-//swagger:parameters GetAdvertising
-type ListAGetAdvertisingParam struct {
-	//in:query
-	//description or photos, or both with ',' splitter; example(description,photos)
-	Body string `json:"fields"`
+type GetAdvertisingResponse struct {
+	//in: Body
+	Body struct {
+		Data GetAdvertising `json:"data,omitempty"`
+		Code int            `json:"code"`
+	}
 }

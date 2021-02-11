@@ -18,17 +18,27 @@ type AdvertisingID struct {
 
 // easyjson:json
 type AdvertisingAdd struct {
-	Name        string   `json:"name" db:"name" validate:"max=200"`
-	Description string   `json:"description,omitempty" db:"description" validate:"max=1000"`
-	Photos      []string `json:"photos,omitempty" db:"photos" validate:"max=3"`
-	Cost        int      `json:"cost" db:"cost"`
+	// max length: 200
+	Name string `json:"name" db:"name" validate:"max=200"`
+	// max length: 1000
+	Description string `json:"description,omitempty" db:"description" validate:"max=1000"`
+	// max length: 3
+	Photos []string `json:"photos,omitempty" db:"photos" validate:"max=3"`
+	Cost   int      `json:"cost" db:"cost"`
+}
+
+// easyjson:json
+type AdvertisingListItem struct {
+	Name      string `json:"name" db:"name" `
+	MainPhoto string `json:"mainPhoto" db:"mainphoto"`
+	Cost      int    `json:"cost" db:"cost"`
 }
 
 // easyjson:json
 type AdvertisingList struct {
-	List  []Advertising `json:"list"`
-	Page  Page          `json:"page"`
-	Links Links         `json:"links"`
+	List  []AdvertisingListItem `json:"list"`
+	Page  Page                  `json:"page"`
+	Links Links                 `json:"links"`
 }
 
 // easyjson:json

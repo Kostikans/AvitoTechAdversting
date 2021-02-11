@@ -2,40 +2,67 @@ basePath: /
 consumes:
 - application/json
 definitions:
-  AddAdvertisingParamWrap:
+  AdvertisingAdd:
+    description: easyjson:json
     properties:
       cost:
         format: int64
         type: integer
         x-go-name: Cost
       description:
-        description: max length 1000
+        maxLength: 1000
         type: string
         x-go-name: Description
       name:
-        description: max length 200
+        maxLength: 200
         type: string
         x-go-name: Name
       photos:
-        description: max length 3
         items:
           type: string
+        maxLength: 3
         type: array
         x-go-name: Photos
     type: object
-    x-go-package: _/home/kostikan/GoBuilds/github.com/Kostikans/AvitoTechAdversting/docs
-  AddAdvertisingWrap:
+    x-go-package: github.com/Kostikans/AvitoTechadvertising/internal/app/advertising/model
+  AdvertisingID:
+    description: easyjson:json
     properties:
-      code:
+      advertisingID:
         format: int64
         type: integer
-        x-go-name: Code
-      data:
-        format: int64
-        type: integer
-        x-go-name: Data
+        x-go-name: AdvID
     type: object
-    x-go-package: _/home/kostikan/GoBuilds/github.com/Kostikans/AvitoTechAdversting/docs
+    x-go-package: github.com/Kostikans/AvitoTechadvertising/internal/app/advertising/model
+  AdvertisingList:
+    description: easyjson:json
+    properties:
+      links:
+        $ref: '#/definitions/Links'
+      list:
+        items:
+          $ref: '#/definitions/AdvertisingListItem'
+        type: array
+        x-go-name: List
+      page:
+        $ref: '#/definitions/Page'
+    type: object
+    x-go-package: github.com/Kostikans/AvitoTechadvertising/internal/app/advertising/model
+  AdvertisingListItem:
+    description: easyjson:json
+    properties:
+      cost:
+        format: int64
+        type: integer
+        x-go-name: Cost
+      mainPhoto:
+        type: string
+        x-go-name: MainPhoto
+      name:
+        type: string
+        x-go-name: Name
+    type: object
+    x-go-package: github.com/Kostikans/AvitoTechadvertising/internal/app/advertising/model
   ErrorRequestWrap:
     properties:
       code:
@@ -46,24 +73,15 @@ definitions:
         type: string
         x-go-name: Err
     type: object
-    x-go-package: _/home/kostikan/GoBuilds/github.com/Kostikans/AvitoTechAdversting/docs
-  GetAdvertisingWrap:
-    properties:
-      code:
-        format: int64
-        type: integer
-        x-go-name: Code
-      data:
-        $ref: '#/definitions/GetAdvertisingWrapModel'
-    type: object
-    x-go-package: _/home/kostikan/GoBuilds/github.com/Kostikans/AvitoTechAdversting/docs
-  GetAdvertisingWrapModel:
+    x-go-package: github.com/Kostikans/AvitoTechadvertising/docs
+  GetAdvertising:
     properties:
       cost:
         format: int64
         type: integer
         x-go-name: Cost
       description:
+        description: optional
         type: string
         x-go-name: Description
       mainPhoto:
@@ -73,25 +91,44 @@ definitions:
         type: string
         x-go-name: Name
       photos:
+        description: optional
         items:
           type: string
         type: array
         x-go-name: Photos
     type: object
-    x-go-package: _/home/kostikan/GoBuilds/github.com/Kostikans/AvitoTechAdversting/docs
-  ListAdvertisingResponseWrap:
+    x-go-package: github.com/Kostikans/AvitoTechadvertising/docs
+  Links:
+    description: easyjson:json
     properties:
-      code:
+      last:
+        type: string
+        x-go-name: Last
+      next:
+        type: string
+        x-go-name: NextUrl
+      prev:
+        type: string
+        x-go-name: PrevUrl
+    type: object
+    x-go-package: github.com/Kostikans/AvitoTechadvertising/internal/app/advertising/model
+  Page:
+    description: easyjson:json
+    properties:
+      currentPage:
         format: int64
         type: integer
-        x-go-name: Code
-      data:
-        items:
-          $ref: '#/definitions/GetAdvertisingWrapModel'
-        type: array
-        x-go-name: Data
+        x-go-name: CurrentPage
+      lastPage:
+        format: int64
+        type: integer
+        x-go-name: LastPage
+      perPage:
+        format: int64
+        type: integer
+        x-go-name: PerPage
     type: object
-    x-go-package: _/home/kostikan/GoBuilds/github.com/Kostikans/AvitoTechAdversting/docs
+    x-go-package: github.com/Kostikans/AvitoTechadvertising/internal/app/advertising/model
 info:
   description: Swagger spec.
   title: Golang service API for Avito
@@ -101,7 +138,8 @@ paths:
     get:
       operationId: ListAdvertising
       parameters:
-      - in: query
+      - description: '"cost" or "created"'
+        in: query
         name: sort
         type: string
         x-go-name: Sort
@@ -109,6 +147,12 @@ paths:
         name: desc
         type: boolean
         x-go-name: Desc
+      - description: by default 1
+        format: int64
+        in: query
+        name: page
+        type: integer
+        x-go-name: Page
       responses:
         "200":
           $ref: '#/responses/ListAdvertising'
@@ -122,7 +166,7 @@ paths:
       - in: body
         name: Body
         schema:
-          $ref: '#/definitions/AddAdvertisingParamWrap'
+          $ref: '#/definitions/AdvertisingAdd'
       responses:
         "200": {}
         "201":
@@ -140,11 +184,12 @@ paths:
         name: id
         required: true
         type: integer
-        x-go-name: Body
-      - in: query
+        x-go-name: ID
+      - description: description or photos, or both with ',' splitter; example(description,photos)
+        in: query
         name: fields
         type: string
-        x-go-name: Body
+        x-go-name: Fields
       responses:
         "200":
           $ref: '#/responses/GetAdvertising'
@@ -159,13 +204,40 @@ produces:
 responses:
   AddAdvertising:
     schema:
-      $ref: '#/definitions/AddAdvertisingWrap'
+      properties:
+        code:
+          format: int64
+          type: integer
+          x-go-name: Code
+        data:
+          $ref: '#/definitions/AdvertisingID'
+      type: object
   GetAdvertising:
+    headers:
+      Body:
+        description: 'in: Body'
     schema:
-      $ref: '#/definitions/GetAdvertisingWrap'
+      properties:
+        code:
+          format: int64
+          type: integer
+          x-go-name: Code
+        data:
+          $ref: '#/definitions/GetAdvertising'
+      type: object
   ListAdvertising:
+    headers:
+      Body:
+        description: 'in: Body'
     schema:
-      $ref: '#/definitions/ListAdvertisingResponseWrap'
+      properties:
+        code:
+          format: int64
+          type: integer
+          x-go-name: Code
+        data:
+          $ref: '#/definitions/AdvertisingList'
+      type: object
   badrequest:
     description: invalid json or get parameters
     schema:
