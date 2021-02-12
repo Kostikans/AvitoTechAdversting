@@ -226,20 +226,18 @@ func TestAdvertisingRepository_ListAdvertising(t *testing.T) {
 		rowsCount := sqlmock.NewRows([]string{"count"}).AddRow(
 			11)
 
-		rowsAdvertising := sqlmock.NewRows([]string{"name", "description", "mainphoto", "cost"}).AddRow(
-			"Продам гараж", "Очень хороший", "sfd/test.jpeg", 1432).AddRow(
-			"Продам гараж", "Очень хороший", "sfd/test.jpeg", 1432)
+		rowsAdvertising := sqlmock.NewRows([]string{"name", "mainphoto", "cost"}).AddRow(
+			"Продам гараж", "sfd/test.jpeg", 1432).AddRow(
+			"Продам гараж", "sfd/test.jpeg", 1432)
 
 		sqlxDb := sqlx.NewDb(db, "sqlmock")
 
 		rep := NewAdvertisingRepository(sqlxDb)
 		query := rep.GenerateQueryForGetAdvertisingList("cost", "true")
 
-		advertisingListTest := advertisingModel.AdvertisingList{List: []advertisingModel.Advertising{{
-			Name: "Продам гараж", Description: "Очень хороший",
-			MainPhoto: "sfd/test.jpeg", Cost: 1432,
-		}, {Name: "Продам гараж", Description: "Очень хороший",
-			MainPhoto: "sfd/test.jpeg", Cost: 1432}},
+		advertisingListTest := advertisingModel.AdvertisingList{List: []advertisingModel.AdvertisingListItem{{
+			Name: "Продам гараж", MainPhoto: "sfd/test.jpeg", Cost: 1432,
+		}, {Name: "Продам гараж", MainPhoto: "sfd/test.jpeg", Cost: 1432}},
 			Page: advertisingModel.Page{CurrentPage: 1, PerPage: 10, LastPage: 2}}
 
 		mock.ExpectQuery(query).
@@ -256,6 +254,70 @@ func TestAdvertisingRepository_ListAdvertising(t *testing.T) {
 		assert.Equal(t, advertisingListTest, advertisingListActual)
 	})
 
+	t.Run("ListAdvertising", func(t *testing.T) {
+		rowsCount := sqlmock.NewRows([]string{"count"}).AddRow(
+			11)
+
+		rowsAdvertising := sqlmock.NewRows([]string{"name", "mainphoto", "cost"}).AddRow(
+			"Продам гараж", "sfd/test.jpeg", 1432).AddRow(
+			"Продам гараж", "sfd/test.jpeg", 1432)
+
+		sqlxDb := sqlx.NewDb(db, "sqlmock")
+
+		rep := NewAdvertisingRepository(sqlxDb)
+		query := rep.GenerateQueryForGetAdvertisingList("created", "false")
+
+		advertisingListTest := advertisingModel.AdvertisingList{List: []advertisingModel.AdvertisingListItem{{
+			Name: "Продам гараж", MainPhoto: "sfd/test.jpeg", Cost: 1432,
+		}, {Name: "Продам гараж", MainPhoto: "sfd/test.jpeg", Cost: 1432}},
+			Page: advertisingModel.Page{CurrentPage: 1, PerPage: 10, LastPage: 2}}
+
+		mock.ExpectQuery(query).
+			WithArgs().
+			WillReturnRows(rowsAdvertising)
+
+		query = GetPageCount
+		mock.ExpectQuery(query).
+			WithArgs().
+			WillReturnRows(rowsCount)
+
+		advertisingListActual, err := rep.ListAdvertising("created", "false", 1)
+		assert.NoError(t, err)
+		assert.Equal(t, advertisingListTest, advertisingListActual)
+	})
+
+	t.Run("ListAdvertising", func(t *testing.T) {
+		rowsCount := sqlmock.NewRows([]string{"count"}).AddRow(
+			11)
+
+		rowsAdvertising := sqlmock.NewRows([]string{"name", "mainphoto", "cost"}).AddRow(
+			"Продам гараж", "sfd/test.jpeg", 1432).AddRow(
+			"Продам гараж", "sfd/test.jpeg", 1432)
+
+		sqlxDb := sqlx.NewDb(db, "sqlmock")
+
+		rep := NewAdvertisingRepository(sqlxDb)
+		query := rep.GenerateQueryForGetAdvertisingList("created", "true")
+
+		advertisingListTest := advertisingModel.AdvertisingList{List: []advertisingModel.AdvertisingListItem{{
+			Name: "Продам гараж", MainPhoto: "sfd/test.jpeg", Cost: 1432,
+		}, {Name: "Продам гараж", MainPhoto: "sfd/test.jpeg", Cost: 1432}},
+			Page: advertisingModel.Page{CurrentPage: 1, PerPage: 10, LastPage: 2}}
+
+		mock.ExpectQuery(query).
+			WithArgs().
+			WillReturnRows(rowsAdvertising)
+
+		query = GetPageCount
+		mock.ExpectQuery(query).
+			WithArgs().
+			WillReturnRows(rowsCount)
+
+		advertisingListActual, err := rep.ListAdvertising("created", "true", 1)
+		assert.NoError(t, err)
+		assert.Equal(t, advertisingListTest, advertisingListActual)
+	})
+
 	t.Run("ListAdvertisingErr", func(t *testing.T) {
 
 		sqlxDb := sqlx.NewDb(db, "sqlmock")
@@ -263,6 +325,30 @@ func TestAdvertisingRepository_ListAdvertising(t *testing.T) {
 		rep := NewAdvertisingRepository(sqlxDb)
 		query := rep.GenerateQueryForGetAdvertisingList("cost", "true")
 
+		mock.ExpectQuery(query).
+			WithArgs().
+			WillReturnError(errors.New(""))
+
+		_, err := rep.ListAdvertising("cost", "true", 1)
+		assert.Error(t, err)
+		assert.Equal(t, customError.ParseCode(err), responseCodes.ServerInternalError)
+	})
+
+	t.Run("ListAdvertisingErr2", func(t *testing.T) {
+
+		sqlxDb := sqlx.NewDb(db, "sqlmock")
+		rowsAdvertising := sqlmock.NewRows([]string{"name", "mainphoto", "cost"}).AddRow(
+			"Продам гараж", "sfd/test.jpeg", 1432).AddRow(
+			"Продам гараж", "sfd/test.jpeg", 1432)
+
+		rep := NewAdvertisingRepository(sqlxDb)
+		query := rep.GenerateQueryForGetAdvertisingList("cost", "true")
+
+		mock.ExpectQuery(query).
+			WithArgs().
+			WillReturnRows(rowsAdvertising)
+
+		query = GetPageCount
 		mock.ExpectQuery(query).
 			WithArgs().
 			WillReturnError(errors.New(""))

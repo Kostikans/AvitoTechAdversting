@@ -20,6 +20,8 @@ import (
 	"net/http"
 	"os"
 
+	apiMiddleware "github.com/Kostikans/AvitoTechadvertising/internal/app/middleware"
+
 	"github.com/go-playground/validator/v10"
 
 	advertisingDelivery "github.com/Kostikans/AvitoTechadvertising/internal/app/advertising/delivery/http"
@@ -79,6 +81,8 @@ func main() {
 	log := logger.NewLogger(os.Stdout)
 
 	r := NewRouter()
+	r.Use(apiMiddleware.NewPanicMiddleware())
+	r.Use(apiMiddleware.LoggerMiddleware(log))
 	advRepo := advertisingRepository.NewAdvertisingRepository(db)
 	validation := validator.New()
 	advUsecase := advertisingUsecase.NewAdvertisingUsecase(advRepo, validation)

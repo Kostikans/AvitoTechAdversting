@@ -4,8 +4,8 @@ volumes:
   postgres-data:
 
 services:
-  avito_service:
-    image: kostikan/avito_service:${APP_VERSION}
+  avito_advertising:
+    image: kostikan/avito_advertising:${APP_VERSION}
     ports:
       - "8080:8080"
     network_mode: host

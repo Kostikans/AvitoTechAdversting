@@ -96,11 +96,11 @@ func (AdvDelivery *AdvertisingDelivery) ListAdvertisingHandler(w http.ResponseWr
 		return
 	}
 
-	advertisingList.Links = AdvDelivery.makeLinksHttpForListAdvertising(advertisingList.Page)
+	advertisingList.Links = AdvDelivery.makeLinksHttpForListAdvertising(sort, desc, advertisingList.Page)
 	abstractResponse.SendDataResponse(w, responseCodes.OkCode, advertisingList)
 }
 
-func (AdvDelivery *AdvertisingDelivery) makeLinksHttpForListAdvertising(page advertisingModel.Page) advertisingModel.Links {
+func (AdvDelivery *AdvertisingDelivery) makeLinksHttpForListAdvertising(sort string, desc string, page advertisingModel.Page) advertisingModel.Links {
 	url := url.URL{
 		Path: "/api/v1/advertising",
 	}
@@ -108,6 +108,8 @@ func (AdvDelivery *AdvertisingDelivery) makeLinksHttpForListAdvertising(page adv
 	query := url.Query()
 
 	query.Set("page", strconv.Itoa(page.LastPage))
+	query.Set("sort", sort)
+	query.Set("desc", desc)
 	url.RawQuery = query.Encode()
 	links.Last = url.Path + "?" + url.RawQuery
 

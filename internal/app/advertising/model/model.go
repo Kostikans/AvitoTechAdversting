@@ -37,15 +37,15 @@ type AdvertisingListItem struct {
 // easyjson:json
 type AdvertisingList struct {
 	List  []AdvertisingListItem `json:"list"`
-	Page  Page                  `json:"page"`
-	Links Links                 `json:"links"`
+	Page  Page                  `json:"page" mapstructure:"page"`
+	Links Links                 `json:"links" mapstructure:"links"`
 }
 
 // easyjson:json
 type Links struct {
-	NextUrl string `json:"next"`
-	PrevUrl string `json:"prev"`
-	Last    string `json:"last"`
+	NextUrl string `json:"next" mapstructure:"next"`
+	PrevUrl string `json:"prev" mapstructure:"prev"`
+	Last    string `json:"last" mapstructure:"last"`
 }
 
 // easyjson:json
