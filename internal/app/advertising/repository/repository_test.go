@@ -36,7 +36,7 @@ func TestAdvertisingRepository_AddAdvertising(t *testing.T) {
 			Photos: []string{"sfd/test.jpeg", "svcx/gd.jpeg"}, Cost: 1432}
 
 		mock.ExpectQuery(query).
-			WithArgs(advertisingAddTest.Name, advertisingAddTest.Description, advertisingAddTest.Photos[0], pq.Array(advertisingAddTest.Photos[1:]), advertisingAddTest.Cost).
+			WithArgs(advertisingAddTest.Name, advertisingAddTest.Description, advertisingAddTest.Photos[0], pq.Array(advertisingAddTest.Photos), advertisingAddTest.Cost).
 			WillReturnRows(rowsAdvertising)
 
 		query = IncrementAdvertisingCount

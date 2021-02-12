@@ -6,9 +6,9 @@ const GetAdvertising = "SELECT name,cost,photos[1] from advertising where advert
 
 const GetAdvertisingWithPhotos = "SELECT name,cost,photos[1],photos from advertising where advertising_id=$1"
 
-const GetAdvertisingWithPhotosAndDescription = "SELECT name,cost,photos[1],photos,description  from advertising where advertising_id=$1"
+const GetAdvertisingWithPhotosAndDescription = "SELECT name,cost,photos[1] as mainphoto,photos,description  from advertising where advertising_id=$1"
 
-const GetAdvertisingWithDescription = "SELECT name,cost,photos[1],description  from advertising where advertising_id=$1"
+const GetAdvertisingWithDescription = "SELECT name,cost,photos[1] as mainphoto,description  from advertising where advertising_id=$1"
 
 const CheckAdvertisingExist = "SELECT * from advertising where advertising_id=$1"
 

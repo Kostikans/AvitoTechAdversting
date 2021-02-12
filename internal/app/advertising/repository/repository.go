@@ -25,7 +25,7 @@ func NewAdvertisingRepository(db *sqlx.DB) *AdvertisingRepository {
 }
 func (advRepo *AdvertisingRepository) AddAdvertising(advertising advertisingModel.AdvertisingAdd) (advertisingModel.AdvertisingID, error) {
 	var advertisingID advertisingModel.AdvertisingID
-	err := advRepo.db.QueryRow(AddAdvertising, advertising.Name, advertising.Description, advertising.Photos[0], pq.Array(advertising.Photos[1:]), advertising.Cost).Scan(&advertisingID.AdvID)
+	err := advRepo.db.QueryRow(AddAdvertising, advertising.Name, advertising.Description, advertising.Photos[0], pq.Array(advertising.Photos), advertising.Cost).Scan(&advertisingID.AdvID)
 	if err != nil {
 		return advertisingID, customError.NewCustomError(err, responseCodes.ServerInternalError, 1)
 	}
