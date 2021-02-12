@@ -13,7 +13,7 @@ make tests (покрытие около 75%)
 [Swagger-doc](http://localhost:9000/docs/index.html)
 
 ## Архитектура сервиса
-![Service Architecture](https://github.com/Kostikans/AvitoTechAdvertising/diagram.jpg)
+![Service Architecture](https://github.com/Kostikans/AvitoTechAdvertising/raw/master/diagram.jpg)
 
 ## p.s.
 env файл закинул в репу чтобы можно было сразу протестить проект, так то его понятно там быть не должно)
