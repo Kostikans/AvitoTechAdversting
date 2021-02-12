@@ -108,8 +108,12 @@ func (AdvDelivery *AdvertisingDelivery) makeLinksHttpForListAdvertising(sort str
 	query := url.Query()
 
 	query.Set("page", strconv.Itoa(page.LastPage))
-	query.Set("sort", sort)
-	query.Set("desc", desc)
+	if sort != "" {
+		query.Set("sort", sort)
+	}
+	if desc != "" {
+		query.Set("desc", desc)
+	}
 	url.RawQuery = query.Encode()
 	links.Last = url.Path + "?" + url.RawQuery
 
