@@ -18,6 +18,7 @@ func LoggerMiddleware(log *logger.CustomLogger) mux.MiddlewareFunc {
 				next.ServeHTTP(w, req)
 				return
 			}
+
 			rand.Seed(time.Now().UnixNano())
 			id := fmt.Sprintf("%016x", rand.Int())[:5]
 

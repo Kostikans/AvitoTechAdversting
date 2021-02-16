@@ -7,7 +7,7 @@ services:
   avito_advertising:
     image: kostikan/avito_advertising:${APP_VERSION}
     ports:
-      - "8080:8080"
+      - "9000:9000"
     network_mode: host
     depends_on:
       - postgres
